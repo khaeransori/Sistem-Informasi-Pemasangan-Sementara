@@ -1,0 +1,168 @@
+// Import
+@import "lesshat.less";
+
+	
+	// Theme Colors
+	@text_color_light: #737881;
+	@text_disabled: #dee0e4;
+	
+	@main_color: #303641;
+	
+	@main_text_color: #aaabae; // or fade(#FFF, 50%)
+	@main_text_acitve_color: #fff;
+	@main_border_color: #454a54;
+	@main_active_color: #262b34;
+	
+	@main_color_inv: #de6c65;
+	
+	@main_color_2: #7f8186;
+	
+	
+	@hover_text_color: lighten(@main_color, 35%);
+	
+	@menu_active_color: #2b303a;
+	@menu_active_text_color: #fff;
+	@submenu_color: #2b303a;
+	@submenu_color_2: #272b34;
+	
+	@background_color: #ffffff;
+	
+	@secondary_background_color: #f0f0f1;
+	@secondary_color: #ec5956;
+	@secondary_text_color: #fff;
+	
+	
+	// Combination of Colors (badges, buttons, tabs, etc)
+	@default: #ebebeb;
+	@default_text: #373e4a;
+	@p_text_color: #949494;
+	
+	@primary: @main_color;
+	@primary_text: #fff;
+	
+	@secondary: #ee4749;
+	@secondary_text: #fff;
+	
+	@success: #00a651;
+	@success_text: #fff;
+	
+	@info: #21a9e1;
+	@info_text: #fff;
+	
+	@warning: #fad839;
+	@warning_text: #fff;
+	
+	@danger: #cc2424;
+	@danger_text: #fff;
+	
+
+
+@import "neon-mixins.less";
+
+// The rest
+body {
+	font-family: @font_family;
+	
+	&.overflow-x-disabled {
+		overflow-x: hidden;
+	}
+}
+
+a {
+	color: @default_text;
+	
+	&:hover {
+		text-decoration: none;
+		color: @hover_text_color;
+	}
+}
+
+// Core variables and mixins
+@import "bs-less/variables.less";
+@import "bs-less/mixins.less";
+
+// Reset
+@import "bs-less/normalize.less";
+@import "bs-less/print.less";
+
+// Core CSS
+@import "bs-less/scaffolding.less";
+@import "bs-less/type.less";
+@import "bs-less/code.less";
+@import "bs-less/grid.less";
+@import "bs-less/tables.less";
+@import "bs-less/forms.less";
+@import "bs-less/buttons.less";
+
+// Components
+@import "bs-less/component-animations.less";
+@import "bs-less/glyphicons.less";
+@import "bs-less/dropdowns.less";
+@import "bs-less/button-groups.less";
+@import "bs-less/input-groups.less";
+@import "bs-less/navs.less";
+@import "bs-less/navbar.less";
+@import "bs-less/breadcrumbs.less";
+@import "bs-less/pagination.less";
+@import "bs-less/pager.less";
+@import "bs-less/labels.less";
+@import "bs-less/badges.less";
+@import "bs-less/jumbotron.less";
+@import "bs-less/thumbnails.less";
+@import "bs-less/alerts.less";
+@import "bs-less/progress-bars.less";
+@import "bs-less/media.less";
+@import "bs-less/list-group.less";
+@import "bs-less/panels.less";
+@import "bs-less/wells.less";
+@import "bs-less/close.less";
+
+// Components w/ JavaScript
+@import "bs-less/modals.less";
+@import "bs-less/tooltip.less";
+@import "bs-less/popovers.less";
+@import "bs-less/carousel.less";
+
+// Utility classes
+@import "bs-less/utilities.less";
+@import "bs-less/responsive-utilities.less";
+
+
+// Other Bootstrap Plugins
+@import "other-less/bootstrap-switch.less";
+@import "other-less/bootstrap-tagsinput.less";
+@import "other-less/datepicker.less";
+@import "other-less/timepicker.less";
+@import "other-less/colorpicker.less";
+@import "other-less/fileinput.less";
+@import "other-less/toastr.less";
+@import "other-less/morris.core.less";
+
+// Neon Elements
+@import "neon-less/variables.less";
+@import "neon-less/menu.less";
+@import "neon-less/profile-info.less";
+@import "neon-less/miscellaneous.less";
+@import "neon-less/tabs-vertical.less";
+@import "neon-less/range-slider.less";
+@import "neon-less/blockquote.less";
+@import "neon-less/checkbox-replacement.less";
+@import "neon-less/select2.less";
+@import "neon-less/selectboxit.less";
+@import "neon-less/typeahead.less";
+@import "neon-less/daterangepicker.less";
+@import "neon-less/multiselect.less";
+@import "neon-less/form-wizard.less";
+@import "neon-less/wysihtml5.less";
+@import "neon-less/datatables.less";
+@import "neon-less/chat.less";
+@import "neon-less/tiles.less";
+@import "neon-less/404.less";
+@import "neon-less/invoice.less";
+@import "neon-less/inbox.less";
+@import "neon-less/page-transitions.less";
+@import "neon-less/login.less";
+@import "neon-less/tocify.less";
+@import "neon-less/calendar.less";
+@import "neon-less/portlets.less";
+@import "neon-less/responsive.less";

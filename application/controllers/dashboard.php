@@ -7,6 +7,9 @@ class Dashboard extends CI_Controller {
 		parent::__construct();
 		if ($this->session->userdata('SESS_LOGGED_IN') != TRUE)
 			header('location:'.base_url());
+
+		if ($this->session->userdata('SESS_IS_ADMIN') != TRUE)
+			header('location:'.base_url().'guest');
 	}
 
 	public function index()
@@ -32,7 +35,6 @@ class Dashboard extends CI_Controller {
 			case 'tambah':
   				$this->form_validation->set_rules('tanggal_daftar', 'Tanggal Daftar', 'required|xss_clean');
 				$this->form_validation->set_rules('nama', 'Nama', 'required');
-				$this->form_validation->set_rules('daya', 'Daya', 'required');
 				$this->form_validation->set_rules('no_registrasi', 'No. Registrasi', 'required');
 				$this->form_validation->set_rules('alamat', 'Alamat', 'required');
 				$this->form_validation->set_rules('daya_pesta', 'Daya Pemasangan Sementara', 'required');
@@ -51,13 +53,15 @@ class Dashboard extends CI_Controller {
 					$this->load->view('global/footer');
 				} else {
 
-					$status = ($this->input->post('status') == 'on') ? 1 : 0;
+					$status 		= ($this->input->post('status') == 'on') ? 1 : 0;
+					$id_pelanggan 	= ($this->input->post('jenis') == 1) ? $this->input->post('id_pelanggan') : '';
+					$daya_pelanggan = ($this->input->post('jenis') == 1) ? $this->input->post('daya') : '';
 					$data = array(
 						'tanggal_daftar'		=> $this->input->post('tanggal_daftar'),
 						'nama_pemohon'			=> $this->input->post('nama'),
 						'jenis_pemohon'			=> $this->input->post('jenis'),
-						'id_pelanggan_pemohon'	=> $this->input->post('id_pelanggan'),
-						'daya_pemohon'			=> $this->input->post('daya'),
+						'id_pelanggan_pemohon'	=> $id_pelanggan,
+						'daya_pemohon'			=> $daya_pelanggan,
 						'no_registrasi_pemohon'	=> $this->input->post('no_registrasi'),
 						'alamat_pemohon'		=> $this->input->post('alamat'),
 						'daya_pesta' 			=> $this->input->post('daya_pesta'),
@@ -88,7 +92,6 @@ class Dashboard extends CI_Controller {
 
 				$this->form_validation->set_rules('tanggal_daftar', 'Tanggal Daftar', 'required|xss_clean');
 				$this->form_validation->set_rules('nama', 'Nama', 'required');
-				$this->form_validation->set_rules('daya', 'Daya', 'required');
 				$this->form_validation->set_rules('no_registrasi', 'No. Registrasi', 'required');
 				$this->form_validation->set_rules('alamat', 'Alamat', 'required');
 				$this->form_validation->set_rules('daya_pesta', 'Daya Pemasangan Sementara', 'required');
@@ -97,8 +100,6 @@ class Dashboard extends CI_Controller {
 				$this->form_validation->set_rules('jam_pasang', 'Jam Pasang', 'required');
 				$this->form_validation->set_rules('petugas_pasang', 'Petugas Pasang', 'required');
 				$this->form_validation->set_rules('tanggal_bongkar', 'Tanggal Bongkar', 'required');
-				$this->form_validation->set_rules('jam_bongkar', 'Jam Bongkar', 'required');
-				$this->form_validation->set_rules('petugas_bongkar', 'Petugas Pasang', 'required');
 
 				if ($this->form_validation->run() === FALSE) {
 					$data['act'] 			= 'edit';
@@ -132,19 +133,20 @@ class Dashboard extends CI_Controller {
 
 					$data['id_petugas_bongkar']		= $pesta->id_petugas_bongkar;
 					
-
 					$this->load->view('global/header');
 					$this->load->view('data/form', $data);
 					$this->load->view('global/footer');
 				} else {
 
-					$status = ($this->input->post('status') == 'on') ? 1 : 0;
+					$status 		= ($this->input->post('status') == 'on') ? 1 : 0;
+					$id_pelanggan 	= ($this->input->post('jenis') == 1) ? $this->input->post('id_pelanggan') : '';
+					$daya_pelanggan = ($this->input->post('jenis') == 1) ? $this->input->post('daya') : '';
 					$data = array(
 						'tanggal_daftar'		=> $this->input->post('tanggal_daftar'),
 						'nama_pemohon'			=> $this->input->post('nama'),
 						'jenis_pemohon'			=> $this->input->post('jenis'),
-						'id_pelanggan_pemohon'	=> $this->input->post('id_pelanggan'),
-						'daya_pemohon'			=> $this->input->post('daya'),
+						'id_pelanggan_pemohon'	=> $id_pelanggan,
+						'daya_pemohon'			=> $daya_pelanggan,
 						'no_registrasi_pemohon'	=> $this->input->post('no_registrasi'),
 						'alamat_pemohon'		=> $this->input->post('alamat'),
 						'daya_pesta' 			=> $this->input->post('daya_pesta'),
@@ -187,89 +189,20 @@ class Dashboard extends CI_Controller {
 				break;
 
 			case 'cetak':
-				$data 	= $this->model_data->laporan_satuan($object);
-
-				//load our new PHPExcel library
-				$this->load->library('excel');
-				//activate worksheet number 1
-				$this->excel->setActiveSheetIndex(0);
-				//name the worksheet
-				$this->excel->getActiveSheet()->setTitle('SIPS');
-				//set cell A1 content with some text
-				//$this->excel->getActiveSheet()->setCellValue('A1', 'Tanggal Daftar');
-				//merge cell A1 until D1
-				$this->excel->getActiveSheet()->mergeCells('A2:A3');
-				$this->excel->getActiveSheet()->mergeCells('B2:G2');
-				$this->excel->getActiveSheet()->mergeCells('H2:I2');
-				$this->excel->getActiveSheet()->mergeCells('J2:M2');
-				$this->excel->getActiveSheet()->mergeCells('N2:P2');
-				$this->excel->getActiveSheet()->mergeCells('Q2:T2');
-				$this->excel->getActiveSheet()->mergeCells('U2:U3');
-
-				$this->excel->getActiveSheet()->setCellValue('A2', 'Tanggal Daftar');
-				$this->excel->getActiveSheet()->setCellValue('B2', 'Pemohon');
-				$this->excel->getActiveSheet()->setCellValue('H2', 'Pemasangan Sementara');
-				$this->excel->getActiveSheet()->setCellValue('J2', 'Pemasangan');
-				$this->excel->getActiveSheet()->setCellValue('N2', 'Jadwal Bongkar');
-				$this->excel->getActiveSheet()->setCellValue('Q2', 'Pembongkaran');
-				$this->excel->getActiveSheet()->setCellValue('U2', 'Delta Jam');
-
-				$this->excel->getActiveSheet()->setCellValue('B3', 'Nama');
-				$this->excel->getActiveSheet()->setCellValue('C3', 'Jenis Pelanggan');
-				$this->excel->getActiveSheet()->setCellValue('D3', 'ID Pelanggan');
-				$this->excel->getActiveSheet()->setCellValue('E3', 'Daya');
-				$this->excel->getActiveSheet()->setCellValue('F3', 'No. Registrasi');
-				$this->excel->getActiveSheet()->setCellValue('G3', 'Alamat');
-				$this->excel->getActiveSheet()->setCellValue('H3', 'Daya Penyambungan Sementara');
-				$this->excel->getActiveSheet()->setCellValue('I3', 'Lama Penyambungan Sementara');
-				$this->excel->getActiveSheet()->setCellValue('J3', 'Tanggal Pasang');
-				$this->excel->getActiveSheet()->setCellValue('K3', 'Jam Pasang');
-				$this->excel->getActiveSheet()->setCellValue('L3', 'Petugas');
-				$this->excel->getActiveSheet()->setCellValue('M3', 'No. Handphone');
-				$this->excel->getActiveSheet()->setCellValue('N3', 'Tanggal Bongkar');
-				$this->excel->getActiveSheet()->setCellValue('O3', 'Jam Bongkar');
-				$this->excel->getActiveSheet()->setCellValue('P3', 'Status');
-				$this->excel->getActiveSheet()->setCellValue('Q3', 'Tanggal Bongkar');
-				$this->excel->getActiveSheet()->setCellValue('R3', 'Jam Bongkar');
-				$this->excel->getActiveSheet()->setCellValue('S3', 'Petugas');
-				$this->excel->getActiveSheet()->setCellValue('T3', 'No. Handphone');
-
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, $data->tanggal_daftar);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(1, 4, $data->nama_pemohon);
-				$jenis = ($data->jenis_pemohon == 1) ? 'Pelanggan' : 'Non-Pelanggan';
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(2, 4, $jenis);
-				$this->excel->getActiveSheet()->setCellValueExplicit('D4', $data->id_pelanggan_pemohon, PHPExcel_Cell_DataType::TYPE_STRING);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(4, 4, $data->daya_pemohon);
-				$this->excel->getActiveSheet()->setCellValueExplicit('F4', $data->no_registrasi_pemohon, PHPExcel_Cell_DataType::TYPE_STRING);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(6, 4, $data->alamat_pemohon);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(7, 4, $data->daya_pesta);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(8, 4, $data->lama_pesta . ' Menit');
-				$tanggal_pasang = explode(' ', $data->tanggal_pasang);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(9, 4, $tanggal_pasang[0]);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(10, 4, $tanggal_pasang[1]);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(11, 4, $data->nama_pegawai_pasang);
-				$this->excel->getActiveSheet()->setCellValueExplicit('M4', $data->no_hp_pegawai_pasang, PHPExcel_Cell_DataType::TYPE_STRING);
-				$jadwal_bongkar = explode(' ', $data->jadwal_bongkar);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(13, 4, $jadwal_bongkar[0]);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(14, 4, $jadwal_bongkar[1]);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(15, 4, '');
-				$tanggal_bongkar = explode(' ', $data->tanggal_bongkar);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(16, 4, $tanggal_bongkar[0]);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(17, 4, $tanggal_bongkar[1]);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(18, 4, $data->nama_pegawai_bongkar);
-				$this->excel->getActiveSheet()->setCellValueExplicit('T4', $data->no_hp_pegawai_bongkar, PHPExcel_Cell_DataType::TYPE_STRING);
-				$this->excel->getActiveSheet()->setCellValueByColumnAndRow(20, 4, $data->delta_jam);
+				// As PDF creation takes a bit of memory, we're saving the created file in /downloads/reports/
+				$data['data']	= $this->model_data->laporan_satuan($object);
+				$data['title']	= 'Laporan Pemasangan Sementara ' . $data['data']->nama_pemohon . ' - ' . $data['data']->tanggal_daftar;
 				 
-				$filename='Laporan Pemasangan Sementara ' . $data->nama_pemohon . ' - ' . $data->tanggal_daftar . '.xls'; //save our workbook as this file name
-				header('Content-Type: application/vnd.ms-excel'); //mime type
-				header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
-				header('Cache-Control: max-age=0'); //no cache
-				             
-				//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
-				//if you want to save it as .XLSX Excel 2007 format
-				$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
-				//force user to download the Excel file without writing it to server's HD
-				$objWriter->save('php://output');
+				ini_set('memory_limit','32M'); // boost the memory limit if it's low <img src="http://davidsimpson.me/wp-includes/images/smilies/icon_wink.gif" alt=";)" class="wp-smiley"> 
+			    $html = $this->load->view('cetak/satuan', $data, true); // render the view into HTML
+			     
+			    $this->load->library('pdf');
+			    $pdf = $this->pdf->load(); 
+			    $pdf->SetFooter($_SERVER['HTTP_HOST'].'|{PAGENO}|'.date(DATE_RFC822)); // Add a footer for good measure <img src="http://davidsimpson.me/wp-includes/images/smilies/icon_wink.gif" alt=";)" class="wp-smiley"> 
+			    $pdf->WriteHTML($html); // write the HTML into the PDF
+			    $pdf->Output($data['title'] . '.pdf', 'D'); // save to file because we can
+				 
+				
 				break;
 
 			case 'check':
@@ -323,6 +256,7 @@ class Dashboard extends CI_Controller {
 						//set cell A1 content with some text
 						//$this->excel->getActiveSheet()->setCellValue('A1', 'Tanggal Daftar');
 						//merge cell A1 until D1
+						$this->excel->getActiveSheet()->mergeCells('A1:U1');
 						$this->excel->getActiveSheet()->mergeCells('A2:A3');
 						$this->excel->getActiveSheet()->mergeCells('B2:G2');
 						$this->excel->getActiveSheet()->mergeCells('H2:I2');
@@ -331,6 +265,7 @@ class Dashboard extends CI_Controller {
 						$this->excel->getActiveSheet()->mergeCells('Q2:T2');
 						$this->excel->getActiveSheet()->mergeCells('U2:U3');
 
+						$this->excel->getActiveSheet()->setCellValue('A1', 'Data Pemasangan Sementara');
 						$this->excel->getActiveSheet()->setCellValue('A2', 'Tanggal Daftar');
 						$this->excel->getActiveSheet()->setCellValue('B2', 'Pemohon');
 						$this->excel->getActiveSheet()->setCellValue('H2', 'Pemasangan Sementara');
@@ -370,7 +305,7 @@ class Dashboard extends CI_Controller {
 							$this->excel->getActiveSheet()->setCellValueExplicit('F'.$row, $data->no_registrasi_pemohon, PHPExcel_Cell_DataType::TYPE_STRING);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $data->alamat_pemohon);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $data->daya_pesta);
-							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $data->lama_pesta . ' Menit');
+							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $data->lama_pesta . ' Jam');
 							$tanggal_pasang = explode(' ', $data->tanggal_pasang);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $tanggal_pasang[0]);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(10, $row, $tanggal_pasang[1]);
@@ -379,7 +314,7 @@ class Dashboard extends CI_Controller {
 							$jadwal_bongkar = explode(' ', $data->jadwal_bongkar);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(13, $row, $jadwal_bongkar[0]);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(14, $row, $jadwal_bongkar[1]);
-							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(15, $row, '');
+							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(15, $row, (1 == $data->status) ? 'ON' : 'OFF');
 							$tanggal_bongkar = explode(' ', $data->tanggal_bongkar);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(16, $row, $tanggal_bongkar[0]);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(17, $row, $tanggal_bongkar[1]);
@@ -427,6 +362,7 @@ class Dashboard extends CI_Controller {
 						//set cell A1 content with some text
 						//$this->excel->getActiveSheet()->setCellValue('A1', 'Tanggal Daftar');
 						//merge cell A1 until D1
+						$this->excel->getActiveSheet()->mergeCells('A1:U1');
 						$this->excel->getActiveSheet()->mergeCells('A2:A3');
 						$this->excel->getActiveSheet()->mergeCells('B2:G2');
 						$this->excel->getActiveSheet()->mergeCells('H2:I2');
@@ -435,6 +371,7 @@ class Dashboard extends CI_Controller {
 						$this->excel->getActiveSheet()->mergeCells('Q2:T2');
 						$this->excel->getActiveSheet()->mergeCells('U2:U3');
 
+						$this->excel->getActiveSheet()->setCellValue('A1', 'Data Pemasangan Sementara');
 						$this->excel->getActiveSheet()->setCellValue('A2', 'Tanggal Daftar');
 						$this->excel->getActiveSheet()->setCellValue('B2', 'Pemohon');
 						$this->excel->getActiveSheet()->setCellValue('H2', 'Pemasangan Sementara');
@@ -474,7 +411,7 @@ class Dashboard extends CI_Controller {
 							$this->excel->getActiveSheet()->setCellValueExplicit('F'.$row, $data->no_registrasi_pemohon, PHPExcel_Cell_DataType::TYPE_STRING);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(6, $row, $data->alamat_pemohon);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(7, $row, $data->daya_pesta);
-							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $data->lama_pesta . ' Menit');
+							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(8, $row, $data->lama_pesta . ' Jam');
 							$tanggal_pasang = explode(' ', $data->tanggal_pasang);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(9, $row, $tanggal_pasang[0]);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(10, $row, $tanggal_pasang[1]);
@@ -483,7 +420,7 @@ class Dashboard extends CI_Controller {
 							$jadwal_bongkar = explode(' ', $data->jadwal_bongkar);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(13, $row, $jadwal_bongkar[0]);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(14, $row, $jadwal_bongkar[1]);
-							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(15, $row, '');
+							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(15, $row, (1 == $data->status) ? 'ON' : 'OFF');
 							$tanggal_bongkar = explode(' ', $data->tanggal_bongkar);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(16, $row, $tanggal_bongkar[0]);
 							$this->excel->getActiveSheet()->setCellValueByColumnAndRow(17, $row, $tanggal_bongkar[1]);
@@ -643,6 +580,137 @@ class Dashboard extends CI_Controller {
 		}		
 	}
 
+	public function guest($act = NULL, $object = NULL)
+	{
+		$this->load->model('model_guest');
+
+		switch ($act) {
+			case 'tambah':
+
+				$this->form_validation->set_rules('nama', 'Nama', 'required|xss_clean');
+				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
+				$this->form_validation->set_rules('password', 'Password', 'required|xss_clean');
+
+				if ($this->form_validation->run() === FALSE) {
+					$data['act'] 		= 'tambah';
+					$data['action']		= base_url() . 'dashboard/guest/tambah';
+
+					$this->load->view('global/header');
+					$this->load->view('guest/form', $data);
+					$this->load->view('global/footer');
+				} else {
+
+					if ($this->model_guest->username_check($this->input->post('username')) > 0) {
+						$this->session->set_flashdata('class', 'alert-danger');
+						$this->session->set_flashdata('message', 'Username sudah ada.');
+						$this->session->set_flashdata('short', 'Oh snap!');
+
+						header('location:' . base_url() . 'dashboard/guest/tambah');
+					} else {
+						$data = array(
+							'nama' 		=> $this->input->post('nama'),
+							'user'		=> $this->input->post('username'),
+							'pass'		=> $this->input->post('password')
+							);
+
+						if ($this->model_guest->tambah($data)) {
+							$this->session->set_flashdata('class', 'alert-success');
+							$this->session->set_flashdata('message', 'Data guest berhasil ditambahkan.');
+							$this->session->set_flashdata('short', 'Well done!');
+						} else {
+							$this->session->set_flashdata('class', 'alert-danger');
+							$this->session->set_flashdata('message', 'Data guest gagal ditambahkan.');
+							$this->session->set_flashdata('short', 'Oh snap!');
+						}
+					}
+
+					header('location:' . base_url() . 'dashboard/guest');
+					
+				}
+				break;
+			
+			case 'edit':
+
+				$this->form_validation->set_rules('nama', 'Nama', 'required|xss_clean');
+				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
+				$this->form_validation->set_rules('password', 'Password', 'required|xss_clean');
+
+				if ($this->form_validation->run() === FALSE) {
+					$data['act'] 		= 'edit';
+					$data['action']		= base_url() . 'dashboard/guest/edit/' . $object;
+
+					$guest 				= $this->model_guest->find($object);
+
+					$data['nama']		= $guest->nama;
+					$data['username']	= $guest->user;
+					$data['password']	= $guest->pass;
+
+					$this->load->view('global/header');
+					$this->load->view('guest/form', $data);
+					$this->load->view('global/footer');
+				} else {
+
+					if ($this->model_guest->username_check_self($this->input->post('username'), $object) > 0) {
+						$this->session->set_flashdata('class', 'alert-danger');
+						$this->session->set_flashdata('message', 'Username sudah ada.');
+						$this->session->set_flashdata('short', 'Oh snap!');
+
+						header('location:' . base_url() . 'dashboard/guest/tambah');
+					} else {
+						$data = array(
+							'nama' 		=> $this->input->post('nama'),
+							'user'		=> $this->input->post('username'),
+							'pass'		=> $this->input->post('password')
+							);
+
+						if ($this->model_guest->update($data, $object)) {
+							$this->session->set_flashdata('class', 'alert-success');
+							$this->session->set_flashdata('message', 'Data guest berhasil diperbaharui.');
+							$this->session->set_flashdata('short', 'Well done!');
+						} else {
+							$this->session->set_flashdata('class', 'alert-danger');
+							$this->session->set_flashdata('message', 'Data guest gagal diperbaharui.');
+							$this->session->set_flashdata('short', 'Oh snap!');
+						}
+					}
+
+					header('location:' . base_url() . 'dashboard/guest');
+					
+				}
+				break;
+
+			case 'hapus':
+
+				if ($this->session->userdata('SESS_ID_USER') == $object) {
+					$this->session->set_flashdata('class', 'alert-danger');
+					$this->session->set_flashdata('message', 'Tidak bisa menghapus data diri sendiri.');
+					$this->session->set_flashdata('short', 'Oh snap!');
+				} else {
+					if ($this->model_guest->hapus($object)) {
+						$this->session->set_flashdata('class', 'alert-success');
+						$this->session->set_flashdata('message', 'Data guest berhasil dihapus.');
+						$this->session->set_flashdata('short', 'Well done!');
+					} else {
+						$this->session->set_flashdata('class', 'alert-danger');
+						$this->session->set_flashdata('message', 'Data guest gagal dihapus.');
+						$this->session->set_flashdata('short', 'Oh snap!');
+					}
+				}
+				
+
+				header('location:' . base_url() . 'dashboard/guest');
+				break;
+
+			default:
+				$data['count'] 			= $this->model_guest->count();
+				$data['list_guest']		= $this->model_guest->get();
+
+				$this->load->view('global/header');
+				$this->load->view('guest/front', $data);
+				$this->load->view('global/footer');
+				break;
+		}		
+	}
 	public function pegawai($act = NULL, $object = NULL)
 	{
 		$this->load->model('model_pegawai');
@@ -755,6 +823,17 @@ class Dashboard extends CI_Controller {
 			echo 'gagal';
 		}
 		
+	}
+
+	public function migrasi_baru()
+	{
+		$this->load->model('model_data');
+
+		if ($this->model_data->migrasi_baru()) {
+			echo 'berhasil';
+		} else {
+			echo 'gagal';
+		}
 	}
 
 	public function logout()

@@ -60,6 +60,15 @@
 			ganti_delta_jam();
 		});
 
+		$('input:radio[name="jenis"]').on('change', function (e) {
+			if ('1' == $(this).val()) {
+				$('#id_pelanggan_wrapper').show();
+				$('#daya_pelanggan_wrapper').show();
+			} else {
+				$('#id_pelanggan_wrapper').hide();
+				$('#daya_pelanggan_wrapper').hide();
+			}
+		})
 	});
 </script>
 <div class="row">
@@ -133,7 +142,7 @@
 						</div>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group" id="id_pelanggan_wrapper" <?php echo (isset($jenis_pemohon) && (1 == $jenis_pemohon)) ? '' : 'style="display: none;"';?>>
 						<label for="id_pelanggan" class="col-sm-3 control-label">ID Pelanggan</label>
 						
 						<div class="col-sm-5">
@@ -141,11 +150,11 @@
 						</div>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group" id="daya_pelanggan_wrapper" <?php echo (isset($jenis_pemohon) && (1 == $jenis_pemohon)) ? '' : 'style="display: none;"';?>>
 						<label for="daya" class="col-sm-3 control-label">Daya</label>
 						
 						<div class="col-sm-5">
-							<input type="text" class="form-control" id="daya" name="daya" placeholder="Daya" value="<?php echo isset($daya_pemohon) ? $daya_pemohon : ''; ?>" required>
+							<input type="text" class="form-control" id="daya" name="daya" placeholder="Daya" value="<?php echo isset($daya_pemohon) ? $daya_pemohon : ''; ?>">
 						</div>
 					</div>
 

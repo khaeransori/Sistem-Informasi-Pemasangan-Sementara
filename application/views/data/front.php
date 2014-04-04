@@ -75,6 +75,13 @@
 							<?php else : ?>
 								<div class="label label-danger">OFF</div>
 							<?php endif; ?>
+
+							<?php
+								$tanggal_bongkar = explode(' ', $data->tanggal_bongkar);
+								if ('0000-00-00' == $tanggal_bongkar[0]):
+							?>
+								<br /><br /><div class="label label-warning">DATA BELUM LENGKAP</div>
+							<?php endif; ?>
 						</td>
 						<td>
 							<a href="<?php echo base_url() . 'dashboard/data/edit/' . $data->id; ?>"><i class="entypo-pencil"></i> Sunting</a>
@@ -82,7 +89,7 @@
 							<a href="#" data-id="<?php echo $data->id; ?>"  data-name="<?php echo $data->nama_pemohon; ?>" class="confirm-delete"><i class="entypo-cancel"></i> Hapus</a>
 						</td>
 					</tr>
-				<?php endforeach; ?>
+				<?php $no++; endforeach; ?>
 			</tbody>
 		</table>
 	<?php else : ?>

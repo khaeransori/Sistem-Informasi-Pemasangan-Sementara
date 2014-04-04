@@ -130,7 +130,7 @@
 				</ul>
 			</li>
 
-			<li <?php echo ($this->uri->segment(2) == 'admin' || $this->uri->segment(2) == 'active') ? "class='active opened'" : "" ; ?>>
+			<li <?php echo ($this->uri->segment(2) == 'admin' || $this->uri->segment(2) == 'pegawai' || $this->uri->segment(2) == 'guest') ? "class='active opened'" : "" ; ?>>
 				<a href="ui-panels.html">
 					<i class="entypo-newspaper"></i>
 					<span>Pengaturan</span>
@@ -147,6 +147,13 @@
 						<a href="<?php echo base_url() . 'dashboard/admin'; ?>">
 							<i class="entypo-users"></i>
 							<span>Administrator</span>
+						</a>
+					</li>
+
+					<li>
+						<a href="<?php echo base_url() . 'dashboard/guest'; ?>">
+							<i class="entypo-users"></i>
+							<span>Guest</span>
 						</a>
 					</li>
 				</ul>

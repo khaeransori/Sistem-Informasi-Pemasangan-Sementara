@@ -10,6 +10,7 @@ class Front extends CI_Controller {
 
 		$this->load->model('model_auth');
 		$this->load->model('model_user');
+		$this->load->model('model_guest');
 	}
 	public function index()
 	{
@@ -21,14 +22,21 @@ class Front extends CI_Controller {
 		} else {
 			$username 	= $this->input->post('username');
 			$password 	= $this->input->post('password');
-
-			if ($this->model_auth->auth($username, $password)) {
-				$detail_user = $this->model_user->get_detail_by_username($username);
+			$jenis 		= $this->input->post('level');
+			if ($this->model_auth->auth($username, $password, $jenis)) {
+				if (1 == $jenis) {
+					$detail_user 	= $this->model_user->get_detail_by_username($username);
+					$jenis 			= TRUE;
+				} else {
+					$detail_user 	= $this->model_guest->get_detail_by_username($username);
+					$jenis 			= FALSE;
+				}
 
 				$array = array(
 					'SESS_ID_USER' 		=> $detail_user->id,
 					'SESS_NAMA_USER' 	=> $detail_user->nama,
-					'SESS_LOGGED_IN'	=> TRUE
+					'SESS_LOGGED_IN'	=> TRUE,
+					'SESS_IS_ADMIN'		=> $jenis
 				);
 				
 				$this->session->set_userdata( $array );

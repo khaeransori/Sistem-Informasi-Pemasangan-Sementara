@@ -87,6 +87,21 @@
 					</div>
 				
 				</div>
+
+				<div class="form-group">
+					
+					<div class="input-group">
+						<div class="input-group-addon">
+							<i class="entypo-users"></i>
+						</div>
+						
+						<select name="level" class="form-control">
+							<option value="1">Administrator</option>
+							<option value="2">Guest</option>
+						</select>
+					</div>
+				
+				</div>
 				
 				<div class="form-group">
 					<button type="submit" class="btn btn-primary btn-block btn-login">
@@ -103,7 +118,13 @@
 	
 </div>
 
-
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/js/jvectormap/jquery-jvectormap-1.2.2.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/js/rickshaw/rickshaw.min.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/js/select2/select2-bootstrap.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/js/select2/select2.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/js/selectboxit/jquery.selectBoxIt.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/js/daterangepicker/daterangepicker-bs3.css">
+	
 	<!-- Bottom Scripts -->
 	<script src="<?php echo base_url(); ?>assets/js/gsap/main-gsap.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/jquery-ui/js/jquery-ui-1.10.3.minimal.min.js"></script>
@@ -113,7 +134,26 @@
 	<script src="<?php echo base_url(); ?>assets/js/neon-api.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/jquery.validate.min.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/neon-login.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/jvectormap/jquery-jvectormap-europe-merc-en.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/jquery.sparkline.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/rickshaw/vendor/d3.v3.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/rickshaw/rickshaw.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/select2/select2.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/bootstrap-tagsinput.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/typeahead.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/selectboxit/jquery.selectBoxIt.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/bootstrap-datepicker.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/bootstrap-timepicker.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/bootstrap-colorpicker.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/bootstrap-switch.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/daterangepicker/moment.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/daterangepicker/daterangepicker.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/jquery.multi-select.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/neon-chat.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/neon-custom.js"></script>
-
+	<script src="<?php echo base_url(); ?>assets/js/jquery.dataTables.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/dataTables.bootstrap.js"></script>
 </body>
 </html>

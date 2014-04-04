@@ -82,14 +82,14 @@ class Model_data extends CI_Model {
 
 	public function count_warning()
 	{
-		$query = $this->db->query('SELECT *, (tanggal_pasang + INTERVAL lama_pesta HOUR) as jadwal_bongkar FROM data WHERE status=1 AND ((tanggal_pasang + INTERVAL lama_pesta HOUR) BETWEEN DATE_ADD(NOW(), INTERVAL 3 HOUR) AND NOW() OR ((tanggal_pasang + INTERVAL lama_pesta HOUR) < NOW()))');
+		$query = $this->db->query('SELECT *, (tanggal_pasang + INTERVAL lama_pesta HOUR) as jadwal_bongkar FROM data WHERE status=1 AND (((tanggal_pasang + INTERVAL lama_pesta HOUR) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 1 HOUR)) OR ((tanggal_pasang + INTERVAL lama_pesta HOUR) < NOW()))');
 
 		return $query->num_rows();
 	}
 
 	public function data_warning()
 	{
-		$query = $this->db->query('SELECT *, (tanggal_pasang + INTERVAL lama_pesta HOUR) as jadwal_bongkar FROM data WHERE status=1 AND ((tanggal_pasang + INTERVAL lama_pesta HOUR) BETWEEN DATE_ADD(NOW(), INTERVAL 3 HOUR) AND NOW() OR ((tanggal_pasang + INTERVAL lama_pesta HOUR) < NOW()))');
+		$query = $this->db->query('SELECT *, (tanggal_pasang + INTERVAL lama_pesta HOUR) as jadwal_bongkar FROM data WHERE status=1 AND (((tanggal_pasang + INTERVAL lama_pesta HOUR) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 1 HOUR)) OR ((tanggal_pasang + INTERVAL lama_pesta HOUR) < NOW()))');
 
 		return $query->result();
 	}
@@ -97,6 +97,24 @@ class Model_data extends CI_Model {
 	public function migrasi()
 	{
 		$query = $this->db->query("ALTER TABLE  `data` ADD  `status` INT( 1 ) NOT NULL DEFAULT  '0' AFTER  `id_petugas_pasang`");
+
+		return $query;
+	}
+
+	public function migrasi_baru()
+	{
+		$query = $this->db->query("CREATE TABLE IF NOT EXISTS `guest` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `user` varchar(255) NOT NULL,
+				  `pass` char(32) NOT NULL,
+				  `nama` varchar(255) NOT NULL,
+				  PRIMARY KEY (`id`),
+				  UNIQUE KEY `user` (`user`)
+				) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3");
+
+		if($query) {
+			$query = $this->db->query("INSERT INTO `guest` (`id`, `user`, `pass`, `nama`) VALUES (1, 'guest', 'guest', 'Guest')");
+		}
 
 		return $query;
 	}

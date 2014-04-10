@@ -10,49 +10,52 @@
 			var lama_pesta 			= $('#lama_pesta').val();
 
 			var tanggal_pasang_baru	= new Date(tanggal[0], tanggal[1], tanggal[2], jam[0], jam[1]);
+			var date 				= new Date(tanggal_pasang_baru.getTime());
 
-			var date				= new Date(tanggal_pasang_baru.getTime() + lama_pesta*1000*60*60);
-
-			var d = date.getDate();
-		    var m = date.getMonth();
-		    var y = date.getFullYear();
-		    var h = date.getHours();
-		    var min = date.getMinutes();
-		    $('#jadwal_bongkar').val(y + '-' + (m<=9 ? '0' + m : m) + '-' + (d <= 9 ? '0' + d : d) + ' ' + (h<=9 ? '0' + h : h) + ':' + (min<=9 ? '0' + min : min) + ':00');
+			$.ajax({
+				type: "POST",
+				url: "<?php echo base_url(); ?>dashboard/get_date/" + lama_pesta + "/" + jam[1] + "/" + jam[0] + "/" + tanggal[2] + "/" + tanggal[1] + "/" + tanggal[0],
+				data: "",
+				success: function(response){
+					$('#jadwal_bongkar').val(response);
+				}
+			})
 		}
 
 		function ganti_delta_jam () {
 			//dapatkan tanggal bongkar seharusnya
 			var jadwal_bongkar 		= $('#jadwal_bongkar').val();
-			var bongkar 			= jadwal_bongkar.split(' ');
-
-			var jadwal_bongkar 		= bongkar[0];
-			var jam_jadwal_bongkar 	= bongkar[1];
-
-			var tanggal 			= jadwal_bongkar.split('-');
-			var jam 		 		= jam_jadwal_bongkar.split(':');
-
-			var jadwal_bongkar		= new Date(tanggal[0], tanggal[1], tanggal[2], jam[0], jam[1]);
-
-			//dapatkan tanggal bongkar sebenarnya
 			var tanggal_bongkar		= $('#tanggal_bongkar').val();
-			var tanggal_bongkar 	= tanggal_bongkar.split('-');
+			
+			if (jadwal_bongkar != 0 && tanggal_bongkar != 0) {
+				var bongkar 			= jadwal_bongkar.split(' ');
 
-			var jam_bongkar			= $('#jam_bongkar').val();
-			var jam_bongkar 	 	= jam_bongkar.split(':');
+				var jadwal_bongkar 		= bongkar[0];
+				var jam_jadwal_bongkar 	= bongkar[1];
 
-			var tanggal_bongkar		= new Date(tanggal_bongkar[0], tanggal_bongkar[1], tanggal_bongkar[2], jam_bongkar[0], jam_bongkar[1]);
+				var tanggal 			= jadwal_bongkar.split('-');
+				var jam 		 		= jam_jadwal_bongkar.split(':');
 
-			// Convert both dates to milliseconds
-			var date1_ms = jadwal_bongkar.getTime();
-			var date2_ms = tanggal_bongkar.getTime();
+				var jadwal_bongkar		= new Date(tanggal[0], tanggal[1], tanggal[2], jam[0], jam[1]);
 
-			// Calculate the difference in milliseconds
-			var difference_ms = date2_ms - date1_ms;
+				//dapatkan tanggal bongkar sebenarnya
+				var tanggal_bongkar 	= tanggal_bongkar.split('-');
 
-			// Convert back to days and return
-			$('#delta_jam').val(Math.round(difference_ms/(1000*60*60))); 
+				var jam_bongkar			= $('#jam_bongkar').val();
+				var jam_bongkar 	 	= jam_bongkar.split(':');
 
+				var tanggal_bongkar		= new Date(tanggal_bongkar[0], tanggal_bongkar[1], tanggal_bongkar[2], jam_bongkar[0], jam_bongkar[1]);
+
+				// Convert both dates to milliseconds
+				var date1_ms = jadwal_bongkar.getTime();
+				var date2_ms = tanggal_bongkar.getTime();
+
+				// Calculate the difference in milliseconds
+				var difference_ms = date2_ms - date1_ms;
+
+				// Convert back to days and return
+				$('#delta_jam').val(Math.round(difference_ms/(1000*60*60)));
+			};
 		}
 
 		$('.dinamis').on('change', function(e) {
@@ -254,7 +257,7 @@
 						
 						<div class="col-sm-5">
 							<div class="date-and-time">
-								<input type="text" name="tanggal_bongkar" id="tanggal_bongkar" class="form-control datepicker dinamis" data-format="yyyy-mm-dd" data-start-view="2" value="<?php echo isset($tanggal_bongkar) ? $tanggal_bongkar : '0'; ?>" placeholder="Tanggal Bongkar">
+								<input type="text" name="tanggal_bongkar" id="tanggal_bongkar" class="form-control datepicker dinamis" data-format="yyyy-mm-dd" data-start-view="2" value="<?php echo isset($tanggal_bongkar) ? $tanggal_bongkar : ''; ?>" placeholder="Tanggal Bongkar">
 								<input type="text" name="jam_bongkar" id="jam_bongkar" class="form-control timepicker dinamis" data-template="dropdown" data-show-seconds="false" data-show-meridian="false"  data-minute-step="5" data-second-step="5" value="<?php echo isset($jam_bongkar) ? $jam_bongkar : ''; ?>" placeholder="Jam Bongkar" />
 							</div>
 						</div>
@@ -286,7 +289,7 @@
 							
 						<div class="col-sm-5">
 							<div class="input-group">
-								<input type="text" class="form-control dinamis" id="delta_jam" name="delta_jam" placeholder="Delta Jam" value="<?php echo isset($delta_jam) ? $delta_jam : '0'; ?>" disabled>
+								<input type="text" class="form-control dinamis" id="delta_jam" name="delta_jam" placeholder="Tentukan tangal pasang dan tanggal bongkar terlebih dahulu" value="<?php echo isset($delta_jam) ? $delta_jam : ''; ?>" disabled>
 								
 								<div class="input-group-addon">
 									<a href="#">Jam</a>

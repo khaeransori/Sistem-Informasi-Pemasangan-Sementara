@@ -51,7 +51,7 @@
 						<a href="#" data-id="<?php echo $guest->id; ?>"  data-name="<?php echo $guest->nama; ?>" class="confirm-delete"><i class="entypo-cancel"></i> Hapus</a>
 					</td>
 				</tr>
-			<?php endforeach; ?>
+			<?php $no++; endforeach; ?>
 		</tbody>
 	</table>
 </div>

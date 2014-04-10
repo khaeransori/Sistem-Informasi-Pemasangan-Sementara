@@ -813,27 +813,18 @@ class Dashboard extends CI_Controller {
 		}		
 	}
 
-	public function migrasi()
+	public function get_date($lama = NULL, $menit = NULL, $jam = NULL, $hari = NULL, $bulan = NULL, $tahun = NULL)
 	{
-		$this->load->model('model_data');
+		$jam 	= $jam  + $lama;
 
-		if ($this->model_data->migrasi()) {
-			echo 'berhasil';
+		if ($hari != 'undefined' || $bulan != 'undefined') {
+			$tanggal = mktime($jam,$menit,0,$bulan,$hari,$tahun);
+			echo date("Y-m-d H:i:s", $tanggal);
 		} else {
-			echo 'gagal';
+			echo 'Isi tanggal pasang terlebih dahulu';
 		}
 		
-	}
-
-	public function migrasi_baru()
-	{
-		$this->load->model('model_data');
-
-		if ($this->model_data->migrasi_baru()) {
-			echo 'berhasil';
-		} else {
-			echo 'gagal';
-		}
+		
 	}
 
 	public function logout()

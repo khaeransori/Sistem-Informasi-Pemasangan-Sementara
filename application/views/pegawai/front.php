@@ -52,7 +52,7 @@
 							<a href="#" data-id="<?php echo $pegawai->id; ?>"  data-name="<?php echo $pegawai->nama; ?>" class="confirm-delete"><i class="entypo-cancel"></i> Hapus</a>
 						</td>
 					</tr>
-				<?php endforeach; ?>
+				<?php $no++; endforeach; ?>
 			</tbody>
 		</table>
 	<?php else : ?>
